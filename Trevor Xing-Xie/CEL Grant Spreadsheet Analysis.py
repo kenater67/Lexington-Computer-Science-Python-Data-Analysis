@@ -68,16 +68,15 @@ def sort(arr):
 def tasks(arr):
     x = arr
     print("\tMenu of tasks:")
-    print("\t\t1. How many unique applicants have applied for CEL grants?"
+    print("\t\t1. How many unique applicants have applied for CEL grants? "
           "\n\t\t2. What were the differences in the amount received throughout the years for each of the categories/organizations?"
           "\n\t\t3. How much total money did we give away in each field?"
           "\n\t\t4. How many applicants applied each year?"
-          "\n\t\t5. Percentage of each categories' requests awarded each year."
+          "\n\t\t5. Percentage of each categories' requests fulfilled each year."
           "\n\t\t6. How many applicants re-applied."
           "\n\t\t7. The total amount of money given away each year."
           "\n\t\t8. Which area got the most total reward from CEL?")
     choice = int(input("\tChoose a task: "))
-
 
     if choice == 1:
         task1(arr)
@@ -98,29 +97,52 @@ def tasks(arr):
 
 
 def task1(arr):
-    i = j = 0
-    applicants_arr = np.empty((1, 3), str)
-    temp_arr = np.zeros(3, str)
-
+    # CREATING ARRAY OF: [ID, Name, # of applications]
+    applicants = []
+    duplicate = []
     for row in arr:
-        duplicate = False
-        temp_arr[0] = i
+        if row[0] in applicants:
+            duplicate[applicants.index(row[0])] += 1
+        elif row[0] not in applicants:
+            applicants.append(row[0])
+            duplicate.append(1)
+
+    print("\t\tThere were " + str(len(applicants)) + " unique applicants.")
+
+    i = 0
+    applicants_arr = np.array([[i, '0', 1]])
+    for applicant in applicants:
+        applicants_arr = np.append(applicants_arr, np.array([[i, applicant, 1]]), axis=0)
         i += 1
-        for row2 in applicants_arr:
-            print("row2: ")
-            print(row2)
-            if row2[1] == row[0]:
-                j += 1
-                duplicate = True
-        temp_arr[2] = j
-        j = 0
 
-        if duplicate == False:
-            temp_arr[1] = row[0]
+    applicants_arr = np.delete(applicants_arr, 0, 0)
+    num_rows = applicants_arr.shape[0] - 1
 
-        applicants_arr = np.append(applicants_arr, temp_arr)
+    for j in range(num_rows):
+        applicants_arr[j, 2] = duplicate[j]
 
-    display(applicants_arr)
+    # print(applicants_arr)
+
+    # PRINTING HOW MANY TIMES ORGANIZATIONS WHICH RE-APPLIED RE-APPLIED
+    print("\t\tApplicants which re-applied:")
+
+    for row in applicants_arr:
+        if int(row[2]) > 1:
+            print("\t\t\t" + row[1] + ": Applied " + row[2] + " times - ", end='')
+            item_indices = np.where(arr == row[1])  # returns tuples of where row[1] is found in arr.
+            #                                         For our 2d array the 1st tuple is row indices, 2nd tuple is column
+            array_of_coordinates = np.array(list(zip(item_indices[0], item_indices[1])))
+            row_indices = array_of_coordinates[:, 0]  # numpy way: returns new array of all 1st elements in each tuple
+            # print(item_indices)
+            # print(array_of_coordinates)
+            # print(row_indices)
+
+            for index in row_indices:
+                if int(arr[index, 4]) == 0:
+                    print("Rejected, ", end='')
+                elif int(arr[index, 4]) > 0:
+                    print("Accepted, ", end='')
+            print()
 
 
 def task2(arr):
@@ -149,6 +171,12 @@ def task3(arr):
     print("\t\tCommunity Building: $" + str(community))
     print("\t\tEnvironment: $" + str(environment))
 
+    x = np.array(
+        ["Ecological Well-being", "Health & Human Services", "Arts & Culture", "Community Building", "Environment"])
+    y = np.array([ecological, health, arts, community, environment])
+    plt.bar(x, y)
+    plt.show()
+
 
 def task4(arr):
     fifteen = sixteen = seventeen = eighteen = nineteen = twenty = 0
@@ -174,11 +202,19 @@ def task4(arr):
     print("\t\t2019: " + str(nineteen) + " applicants")
     print("\t\t2020: " + str(twenty) + " applicants")
 
+    x = np.array(["2015", "2016", "2017", "2018", "2019", "2020"])
+    y = np.array([fifteen, sixteen, seventeen, eighteen, nineteen, twenty])
+    plt.bar(x, y)
+    plt.show()
+
 
 def task5(arr):
     awd = np.zeros((6, 5), int)
     rq = np.zeros((6, 5), int)
-    
+    percent = np.zeros((6, 5), int)
+
+    # GATHERING THROUGH: every single case.  // What is the better way to do this?
+
     for row in arr:
         awarded = int(row[4])
         if row[1] == '2015':
@@ -317,21 +353,83 @@ def task5(arr):
             elif row[3] == '5':
                 rq[5, 4] += requested
 
+    # GATHERING THROUGH: for i in range(6).  // I don't think this works
 
-    print("2015: " + str())
+    """
+    for row in arr:
+        for i in range(6):
+            for j in range(5):
+                awarded = int(row[4])
+                if row[1] == '2015':
+                    if row[3] == '1':
+                        awd[i, j] += awarded
+                elif row[1] == '2016':
+                    if row[3] == '2':
+                        awd[i, j] += awarded
+                elif row[1] == '2017':
+                    if row[3] == '3':
+                        awd[i, j] += awarded
+                elif row[1] == '2018':
+                    if row[3] == '4':
+                        awd[i, j] += awarded
+                elif row[1] == '2019':
+                    if row[3] == '5':
+                        awd[i, j] += awarded
+                elif row[1] == '2020':
+                    if row[3] == '6':
+                        awd[i, j] += awarded
+
+    for row in arr:
+        for i in range(6):
+            for j in range(5):
+                requested = int(row[5])
+                if row[1] == '2015':
+                    if row[3] == '1':
+                        rq[i, j] += requested
+                elif row[1] == '2016':
+                    if row[3] == '2':
+                        rq[i, j] += requested
+                elif row[1] == '2017':
+                    if row[3] == '3':
+                        rq[i, j] += requested
+                elif row[1] == '2018':
+                    if row[3] == '4':
+                        rq[i, j] += requested
+                elif row[1] == '2019':
+                    if row[3] == '5':
+                        rq[i, j] += requested
+                elif row[1] == '2020':
+                    if row[3] == '6':
+                        rq[i, j] += requested
+    """
+    print(rq)
+    # actually answering the question
+    for i in range(6):
+        for j in range(5):
+            percent[i, j] = awd[i, j] / rq[i, j]
+
+    x = np.array(["2015", "2016", "2017", "2018", "2019", "2020"])
+    y = np.array(percent[0], percent[1], percent[2], percent[3], percent[4], percent[5])
+    plt.bar(x, y)
+    plt.show()
+
 
 def task6(arr):
-    copy1 = copy2 = arr
-    counter = counter2 = 0
-    for row in copy1:
-        for row2 in copy2:
-            if row[0] == row2[0]:
-                counter += 1
-                row[0] = 'null'
-        if counter > 1:
-            counter2 += 1
+    applicants = []
+    duplicate = []
+    i = 0
+    for row in arr:
+        if row[0] in applicants:
+            duplicate[applicants.index(row[0])] += 1
+        elif row[0] not in applicants:
+            applicants.append(row[0])
+            duplicate.append(1)
+    for item in duplicate:
+        if item > 1:
+            i += 1
 
-    print(str(counter2) + " applicants re-applied for CEL grants.")
+    print("\t\t" + str(i) + " applicants re-applied for CEL grants.")
+
 
 def task7(arr):
     fifteen = sixteen = seventeen = eighteen = nineteen = twenty = 0
@@ -350,13 +448,18 @@ def task7(arr):
         elif row[1] == '2020':
             twenty += money
 
-    print("\n\tAmount of Money Awarded In:")
-    print("\t\t2015: $" + str(fifteen))
-    print("\t\t2016: $" + str(sixteen))
-    print("\t\t2017: $" + str(seventeen))
-    print("\t\t2018: $" + str(eighteen))
-    print("\t\t2019: $" + str(nineteen))
-    print("\t\t2020: $" + str(twenty))
+    print("\t\tAmount of Money Awarded In:")
+    print("\t\t\t2015: $" + str(fifteen))
+    print("\t\t\t2016: $" + str(sixteen))
+    print("\t\t\t2017: $" + str(seventeen))
+    print("\t\t\t2018: $" + str(eighteen))
+    print("\t\t\t2019: $" + str(nineteen))
+    print("\t\t\t2020: $" + str(twenty))
+
+    x = np.array(["2015", "2016", "2017", "2018", "2019", "2020"])
+    y = np.array([fifteen, sixteen, seventeen, eighteen, nineteen, twenty])
+    plt.bar(x, y)
+    plt.show()
 
 
 def task8(arr):
@@ -383,7 +486,7 @@ def task8(arr):
     }
     lst = list(dictionary.values())
     keys = list(dictionary.keys())
-    print("\tThe area that got the most total reward from CEL was: ", end='')
+    print("\t\tThe area that got the most total reward from CEL was: ", end='')
     print(keys[lst.index(max(lst))], end='')
     print(".")
 
