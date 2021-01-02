@@ -35,3 +35,7 @@ print(year2017)
 print(year2018)
 print(year2019)
 print(year2020)
+
+plt.bar(["2015", "2016", "2017", "2018", "2019", "2020"], [year2015, year2016, year2017, year2018, year2019, year2020])
+plt.title("Total money given each year")
+plt.show()
