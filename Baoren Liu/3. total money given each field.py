@@ -1,4 +1,5 @@
 import csv
+import matplotlib.pyplot as plt
 
 fields = {}
 with open("data.csv", "r") as file:
@@ -12,3 +13,7 @@ with open("data.csv", "r") as file:
 
 for key in fields.keys():
     print(key + ": $" + str(fields[key]))
+
+plt.bar(fields.keys(), fields.values())
+plt.title("Total money given each field")
+plt.show()
