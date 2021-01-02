@@ -10,8 +10,9 @@ with open("data.csv", "r") as file:
         else:
             areas[row[2]] = int(row[3])
 
-plt.hist(areas.values())
-plt.show()
-
 maximum = max(areas.values())
 print(list(areas.keys())[list(areas.values()).index(maximum)])
+
+plt.bar(areas.keys(), areas.values())
+plt.title("Which area got the most reward")
+plt.show()
