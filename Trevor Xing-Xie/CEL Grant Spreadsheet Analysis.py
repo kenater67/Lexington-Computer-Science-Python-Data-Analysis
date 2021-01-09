@@ -144,9 +144,27 @@ def task1(arr):
                     print("Accepted, ", end='')
             print()
 
+    x = np.array(applicants_arr[:, 1])  # takes array of applicants_arr second column
+    y = np.array(applicants_arr[:, 2])  # takes array of applicants_arr third column
+    plt.bar(x, y)
+    plt.show()
+
 
 def task2(arr):
-    x = arr
+    # x is an array of 6 lists for 6 years. Each list has 5 elements for each of the four fields.
+    x = np.zeros((6, 5), dtype=int)
+    fields = np.array(
+        ["Ecological Well-being", "Health & Human Services", "Arts & Culture", "Community Building", "Environment"])
+
+    for row in arr:
+        x[int(row[1]) - 2015, int(row[3])-1] += int(row[4])
+    for i in range(6):
+        print(str(2015+i)+": ")
+        for j in range(5):
+            print(fields[j], end='')
+            print(": ", end='')
+            print(x[i, j])
+        print()
 
 
 def task3(arr):
@@ -208,7 +226,7 @@ def task4(arr):
     plt.show()
 
 
-def task5(arr):
+def task5_notworking(arr):
     awd = np.zeros((6, 5), int)
     rq = np.zeros((6, 5), int)
     percent = np.zeros((6, 5), int)
@@ -414,6 +432,26 @@ def task5(arr):
     plt.show()
 
 
+def task5(arr):
+    awarded = np.zeros((6, 5), dtype=int)
+    requested = np.zeros((6, 5), dtype=int)
+    fields = np.array(
+        ["Ecological Well-being", "Health & Human Services", "Arts & Culture", "Community Building", "Environment"])
+    percent = 0
+
+    for row in arr:
+        awarded[int(row[1]) - 2015, int(row[3]) - 1] += int(row[4])
+        requested[int(row[1]) - 2015, int(row[3]) - 1] += int(row[5])
+    for i in range(6):
+        print(str(2015 + i) + ": ")
+        for j in range(5):
+            percent = awarded[i, j] / requested[i, j]
+            print(fields[j], end='')
+            print(": ", end='')
+            print(percent)
+        print()
+
+
 def task6(arr):
     applicants = []
     duplicate = []
@@ -488,7 +526,7 @@ def task8(arr):
     keys = list(dictionary.keys())
     print("\t\tThe area that got the most total reward from CEL was: ", end='')
     print(keys[lst.index(max(lst))], end='')
-    print(".")
+    print(" with $"+str(max(lst))+".")
 
 
 def menu(arr):
