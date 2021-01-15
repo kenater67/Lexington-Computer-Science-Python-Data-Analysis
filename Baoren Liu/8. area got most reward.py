@@ -1,6 +1,10 @@
 import csv
 import matplotlib.pyplot as plt
 
+def labelvalue(data):
+    for i in data.keys():
+        plt.annotate(str(data[i]), xy=(i, data[i]), ha='center', va='bottom')
+
 areas = {}
 with open("data.csv", "r") as file:
     plots = csv.reader(file, delimiter=",")
@@ -14,5 +18,6 @@ maximum = max(areas.values())
 print(list(areas.keys())[list(areas.values()).index(maximum)])
 
 plt.bar(areas.keys(), areas.values())
+labelvalue(areas)
 plt.title("Which area got the most reward")
 plt.show()
