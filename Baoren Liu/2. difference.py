@@ -1,5 +1,26 @@
 import csv
 
+# new code that doesn't work on my csv file but works on gabriel's
+with open("data.csv", "r") as file:
+    data = csv.reader(file, delimiter=",")
+    categories = ["Environment", "Health & human services", "Community building", "Arts & culture"]
+    record = [[0]*4 for _ in range(6)]
+
+    for row in data:
+        record[int(row[1]) - 2015][int(row[3])] += int(row[4])
+    for y in range(4):
+        print(f"2015 {categories[y]}: {record[0][y]}")
+    for x in range(5):
+        for y in range(4):
+            print(f"{x+2016} {categories[y]}: {record[x+1][y]}, {abs(record[x + 1][y] - record[x][y])}" + (" more than " if record[x + 1][y] > record[x][y] else " less than ") + str(x + 2015))
+
+
+
+
+''' Old code that works with my csv file
+
+
+
 year2015 = {}
 year2016 = {}
 year2017 = {}
@@ -83,3 +104,4 @@ for key in year2020.keys():
         print(f"{key}: {year2020[key]-year2019[key]}")
     except KeyError:
         print(f"{key}: {year2020[key]}")
+'''
