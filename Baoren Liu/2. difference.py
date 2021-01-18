@@ -9,10 +9,10 @@ with open("data.csv", "r") as file:
     for row in data:
         record[int(row[1]) - 2015][int(row[3])] += int(row[4])
     for y in range(4):
-        print(f"2015 {categories[y]}: {record[0][y]}")
+        print(f"2015 {categories[y]}: ${record[0][y]}")
     for x in range(5):
         for y in range(4):
-            print(f"{x+2016} {categories[y]}: {record[x+1][y]}, {abs(record[x + 1][y] - record[x][y])}" + (" more than " if record[x + 1][y] > record[x][y] else " less than ") + str(x + 2015))
+            print(f"{x+2016} {categories[y]}: ${record[x+1][y]}, ${abs(record[x + 1][y] - record[x][y])}" + (" more than " if record[x + 1][y] > record[x][y] else " less than ") + str(x + 2015))
 
 
 
