@@ -13,10 +13,10 @@ def task5(arr):  # function definition; be sure to add your task number after 't
     for i in range(6):
         for j in range(5):
             if moneyRequested[i][j] == 0:
-                print(i+2015,",",j,":", "0.0%")
+                print(i+2015,",",category[j],":", "0.0%")
             else:
                 perFull[i][j] = round((moneyGranted[i][j] / moneyRequested[i][j])*100, 2)
-                print(i+2015,",",j,":", perFull[i][j],"%")
+                print(i+2015,",",category[j],":", perFull[i][j],"%")
     for i in range(6):
         graphTitle = "Percentage fulfilled for each category in " + str(i+2015) 
         plt.title(graphTitle) 
