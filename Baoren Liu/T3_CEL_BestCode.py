@@ -16,9 +16,9 @@ def task3(arr):
     for x in range(5):  # print
         print(f"{categories[x]}: ${record[x]}")
 
-    plt.bar(categories, record)
+    plt.bar(categories, record)  # draw graph
     plt.title("Total money given each field")
-    for i in range(5):
+    for i in range(5):  # label values
         plt.annotate(record[i], xy=(i, record[i]), ha='center', va='bottom')
     plt.show()
 
